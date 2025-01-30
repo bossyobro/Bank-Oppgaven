@@ -20,8 +20,10 @@ body {
     margin: 0;
     padding: 0;
     background-color: #121212; 
-    height: 96vh;
-    color: #ffffff; 
+    min-height: 100vh;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
 }
 
 textarea {
@@ -40,16 +42,21 @@ textarea {
     justify-content: center;
     flex-direction: column;
     gap: 2vh;
-    padding: 10px;
+    padding: 20px;
     background-color: #2a2a2a;
-    max-width: 60vw;
+    max-width: 1200px;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .Center {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: flex-start;
+    flex: 1;
+    padding: 20px 0;
+    overflow-y: auto;
 }
 
 .navItem {
@@ -67,6 +74,9 @@ textarea {
     justify-content: center;
     background-color: #1e1e1e; 
     height: 4vh;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .navItem a{
@@ -84,7 +94,6 @@ textarea {
     text-align: center;
 }
 
-
 .centered{
     display: flex;
     justify-content: center;
@@ -92,7 +101,6 @@ textarea {
     width: 100%;
     height: 100%;
 }
-
 
 .wrappers {
     display: flex;
@@ -125,6 +133,19 @@ textarea {
 
 .accounts-list {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    width: 100%;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+    justify-content: center;
+    justify-items: center;
+    box-sizing: border-box;
+}
+
+.accounts-grid {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     width: 100%;
@@ -136,6 +157,27 @@ textarea {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    width: 280px;
+    margin: 0 auto;
+}
+
+.account-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.account-card h3 {
+    color: #6200ea;
+    margin-bottom: 15px;
+}
+
+.account-card p {
+    margin: 10px 0;
 }
 
 .button {
@@ -262,15 +304,29 @@ textarea {
 
 .users-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 20px;
-    padding: 20px 0;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    width: 100%;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+    justify-content: center;
+    justify-items: center;
+    box-sizing: border-box;
 }
 
 .user-card {
     background-color: #3a3a3a;
     padding: 20px;
     border-radius: 8px;
+    width: 280px;
+    margin: 0 auto;
+    transition: transform 0.2s;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .user-form {
@@ -349,4 +405,22 @@ textarea {
     font-size: 0.9em;
     color: #aaa;
     margin-top: 5px;
+}
+
+@media (max-width: 1200px) {
+    .accounts-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .users-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .accounts-list {
+        grid-template-columns: 1fr;
+    }
+    .users-list {
+        grid-template-columns: 1fr;
+    }
 }

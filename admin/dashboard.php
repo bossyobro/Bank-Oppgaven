@@ -51,6 +51,7 @@ $recent_transactions = $stmt->fetchAll();
             <div><a href="users.php">Manage Users</a></div>
             <div><a href="interest_rates.php">Interest Rates</a></div>
             <div><a href="../logout.php">Logout</a></div>
+            <div><a href="../index.php">Home</a></div>
         </div>
     </div>
 
@@ -70,7 +71,7 @@ $recent_transactions = $stmt->fetchAll();
             </div>
             <div class="stat-card">
                 <h3>Total Balance</h3>
-                <div class="stat-value">kr <?= number_format($stats['total_balance'], 2) ?></div>
+                <div class="stat-value"> <?= number_format($stats['total_balance'], 2)  ?> NOK</div>
             </div>
         </div>
 
@@ -86,7 +87,7 @@ $recent_transactions = $stmt->fetchAll();
                             <?= ucfirst($trans['transaction_type']) ?>
                         </div>
                         <div class="transaction-amount">
-                            kr <?= number_format($trans['amount'], 2) ?>
+                             <?= number_format($trans['amount'], 2) ?> NOK
                         </div>
                         <div class="transaction-date">
                             <?= $trans['transaction_date'] ?>

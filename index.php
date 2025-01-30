@@ -28,25 +28,42 @@ $summary = $stmt->fetch();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./static/styles.css">
     <title>Dashboard</title>
 </head>
+
 <body>
-    <div class="nav">
-        <div class="navItem">
-            <div><a href="accounts.php">My Accounts</a></div>
-            <div><a href="profile.php">Profile</a></div>
-            <div><a href="logout.php">Logout</a></div>
+
+    <?php if (adminCheck() == True): ?>
+        <div class="nav">
+            <div class="navItem">
+                <div><a href="accounts.php">My Accounts</a></div>
+                <div><a href="profile.php">Profile</a></div>
+                <div><a href="logout.php">Logout</a></div>
+                <div><a href="./admin/dashboard.php">Admin Panel</a></div>
+            </div>
         </div>
-    </div>
+
+    <?php else: ?>
+
+        <div class="nav">
+            <div class="navItem">
+                <div><a href="accounts.php">My Accounts</a></div>
+                <div><a href="profile.php">Profile</a></div>
+                <div><a href="logout.php">Logout</a></div>
+            </div>
+        </div>
+
+    <?php endif; ?>
 
     <div class="Center">
         <div class="wrapper">
             <h2>Welcome, <?= htmlspecialchars($user['name']) ?></h2>
-            
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Accounts</h3>
@@ -54,16 +71,17 @@ $summary = $stmt->fetch();
                 </div>
                 <div class="stat-card">
                     <h3>Total Balance</h3>
-                    <div class="stat-value">kr <?= number_format($summary['total_balance'], 2) ?></div>
+                    <div class="stat-value"> <?= number_format($summary['total_balance'], 2) ?> NOK</div>
                 </div>
                 <div class="stat-card">
                     <h3>Total Transactions</h3>
                     <div class="stat-value"><?= number_format($summary['total_transactions']) ?></div>
                 </div>
             </div>
-            
+
             <a href="accounts.php" class="button">Manage Accounts</a>
         </div>
     </div>
 </body>
+
 </html>
