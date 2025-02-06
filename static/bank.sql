@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     address TEXT NOT NULL,
     user_type ENUM('personal', 'business', 'admin') NOT NULL DEFAULT 'personal',
     two_factor_secret VARCHAR(32) DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'deactivated') NOT NULL DEFAULT 'active'
 );
 
 CREATE TABLE IF NOT EXISTS accounts (
@@ -31,7 +32,6 @@ CREATE TABLE IF NOT EXISTS transactions (
     transaction_type ENUM('deposit', 'withdrawal', 'transfer', 'interest') NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
     to_account VARCHAR(20),
-    kid_number VARCHAR(25),
     description TEXT,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE

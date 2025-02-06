@@ -19,33 +19,6 @@ function validateAccountNumber($accountNumber) {
     return true;
 }
 
-function validateKID($kid) {
-    if (!preg_match('/^\d{4,25}$/', $kid)) {
-        return false;
-    }
-    
-    $digits = str_split($kid);
-    $checksum = array_pop($digits); 
-    
-    $sum = 0;
-    $alternate = true;
-    
-    for ($i = count($digits) - 1; $i >= 0; $i--) {
-        $n = intval($digits[$i]);
-        if ($alternate) {
-            $n *= 2;
-            if ($n > 9) {
-                $n = ($n % 10) + 1;
-            }
-        }
-        $sum += $n;
-        $alternate = !$alternate;
-    }
-    
-    $calculatedCheck = (10 - ($sum % 10)) % 10;
-    return $calculatedCheck == $checksum;
-}
-
 function logActivity($conn, $userId, $activity, $details = null) {
     $stmt = $conn->prepare("
         INSERT INTO logs (user_id, activity, details, ip_address, user_agent) 

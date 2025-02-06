@@ -120,7 +120,9 @@ $accounts = $stmt->fetchAll();
                 </div>
                 
                 <button type="submit">Update Profile</button>
+                <a class="linkButton" href="deactivate.php">Deactivate Account</a>
             </form>
+            
             
             <div class="account-summary">
                 <h3>Account Summary</h3>
@@ -143,3 +145,4 @@ $accounts = $stmt->fetchAll();
     </div>
 </body>
 </html> 
+

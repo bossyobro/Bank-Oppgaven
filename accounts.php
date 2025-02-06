@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['create_account'])) {
         $bank_code = "1234";
         $type_code = $account_type === "savings" ? "01" : ($account_type === "checking" ? "02" : "03");
         
-        // Generate random 5-digit number and check if it's unique
+        // Generate random number and check if it's unique
         do {
             $account_number = str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
             $full_account = $bank_code . "." . $type_code . "." . $account_number;

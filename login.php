@@ -42,24 +42,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+        $stmt = $conn->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND status = 'active'");
         $stmt->execute([$username, $username]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['temp_username'] = $user['username'];
             $_SESSION['temp_2fa_secret'] = $user['two_factor_secret'];
-
+            
             logActivity($conn, $user['id'], 'login_attempt', null);
-
+            
             $show_2fa = true;
         } else {
-            if ($user) {
-                logActivity($conn, $user['id'], 'login_failed', 'Invalid password');
+            // Check if account is deactivated
+            $stmt = $conn->prepare("SELECT status FROM users WHERE username = ? OR email = ?");
+            $stmt->execute([$username, $username]);
+            $status = $stmt->fetchColumn();
+            
+            if ($status === 'deactivated') {
+                $notification = '<div class="error">This account has been deactivated. Please contact support.</div>';
             } else {
-                logActivity($conn, null, 'login_failed', 'User not found: ' . $username);
+                if ($user) {
+                    logActivity($conn, $user['id'], 'login_failed', 'Invalid password');
+                } else {
+                    logActivity($conn, null, 'login_failed', 'User not found: ' . $username);
+                }
+                $notification = '<div class="error">Username or password is incorrect. Please try again.</div>';
             }
-            $notification = '<div class="error">Username or password is incorrect. Please try again.</div>';
         }
     }
 }

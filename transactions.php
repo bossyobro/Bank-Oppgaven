@@ -31,20 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $transaction_type = $_POST['transaction_type'];
     $amount = (float)$_POST['amount'];
     $to_account = isset($_POST['to_account']) ? $_POST['to_account'] : null;
-    $kid = isset($_POST['kid']) ? $_POST['kid'] : null;
     
     try {
-        // Validate amount
         if ($amount <= 0) {
             throw new Exception("Please enter a valid amount.");
         }
 
-        // Validate KID if provided
-        if ($kid && !validateKID($kid)) {
-            throw new Exception("Invalid KID number.");
-        }
-
-        // Validate target account number for transfers
         if ($transaction_type === 'transfer') {
             if (!validateAccountNumber($to_account)) {
                 throw new Exception("Invalid account number format.");
@@ -99,15 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             'amount' => $amount,
             'from_account' => $account['account_number'],
             'to_account' => $to_account,
-            'kid' => $kid
         ]));
         
         // Log the transaction
         $stmt = $conn->prepare("
-            INSERT INTO transactions (account_id, transaction_type, amount, to_account, kid_number) 
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO transactions (account_id, transaction_type, amount, to_account) 
+            VALUES (?, ?, ?, ?)
         ");
-        $stmt->execute([$account_id, $transaction_type, $amount, $to_account, $kid]);
+        $stmt->execute([$account_id, $transaction_type, $amount, $to_account]);
         
         $conn->commit();
         $notification = '<div class="success">Transaction completed successfully!</div>';
@@ -173,7 +164,6 @@ $transactions = $stmt->fetchAll();
                 <div id="transfer_fields" style="display: none;">
                     <input type="text" name="to_account" 
                            placeholder="Recipient Account Number">
-                    <input type="text" name="kid" placeholder="KID Number (Optional)">
                 </div>
                 
                 <button type="submit">Submit Transaction</button>
@@ -192,9 +182,6 @@ $transactions = $stmt->fetchAll();
                         <?php if ($trans['to_account']): ?>
                             <div class="transaction-details">
                                 To: <?= htmlspecialchars($trans['to_account']) ?>
-                                <?php if ($trans['kid_number']): ?>
-                                    <br>KID: <?= htmlspecialchars($trans['kid_number']) ?>
-                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                         <div class="transaction-date">
