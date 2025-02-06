@@ -10,7 +10,6 @@ A secure online banking system developed as a school project. The system feature
 - Interest rate management
 - Admin dashboard
 - Account management
-- KID payment support
 
 ## Technical Details
 
@@ -53,7 +52,6 @@ A secure online banking system developed as a school project. The system feature
 - `logout.php` - User logout
 - `setup_2fa.php` - 2FA setup
 - `verify_2fa.php` - 2FA verification
-- `calculate_interest.php` - Interest calculation
 
 ## Database Structure
 
