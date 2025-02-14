@@ -1,10 +1,13 @@
 <?php
 
 function validateAccountNumber($accountNumber) {
+
+    // Check if the account number is valid
     if (!preg_match('/^\d{4}\.\d{2}\.\d{5}$/', $accountNumber)) {
         return false;
     }
-    
+
+    // Check if the bank code is valid
     list($bankCode, $typeCode, $accountCode) = explode('.', $accountNumber);
     
     if ($bankCode !== '1234') {

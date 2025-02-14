@@ -45,6 +45,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     ]);
                     $notification = '<div class="success">User updated successfully.</div>';
                     break;
+
+                case 'activate':
+                    $stmt = $conn->prepare("UPDATE users SET status = 'active' WHERE id = ?");
+                    $stmt->execute([$_POST['user_id']]);
+                    $notification = '<div class="success">User activated successfully.</div>';
+                    break;
+
+                case 'deactivate':
+                    $stmt = $conn->prepare("UPDATE users SET status = 'deactivated' WHERE id = ?");
+                    $stmt->execute([$_POST['user_id']]);
+                    $notification = '<div class="success">User deactivated successfully.</div>';
+                    break;
             }
         } catch (Exception $e) {
             $notification = '<div class="error">Operation failed: ' . htmlspecialchars($e->getMessage()) . '</div>';
@@ -57,7 +69,7 @@ $stmt = $conn->prepare("
     SELECT u.*, COUNT(a.id) as account_count, SUM(a.balance) as total_balance
     FROM users u
     LEFT JOIN accounts a ON u.id = a.user_id
-    GROUP BY u.id
+    GROUP BY u.id, u.status
     ORDER BY u.username
 ");
 $stmt->execute();
@@ -123,12 +135,20 @@ $users = $stmt->fetchAll();
                         </div>
                         
                         <div class="user-stats">
+                            <p>Status: <span class="status-badge <?= $user['status'] === 'active' ? 'status-active' : 'status-deactivated' ?>">
+                                <?= ucfirst($user['status']) ?>
+                            </span></p>
                             <p>Accounts: <?= $user['account_count'] ?></p>
                             <p>Total Balance: kr <?= number_format($user['total_balance'] ?? 0, 2) ?></p>
                         </div>
                         
                         <div class="button-group">
                             <button type="submit" name="action" value="update">Update</button>
+                            <?php if ($user['status'] === 'active'): ?>
+                                <button type="submit" name="action" value="deactivate" class="warning-button">Deactivate</button>
+                            <?php else: ?>
+                                <button type="submit" name="action" value="activate" class="success-button">Activate</button>
+                            <?php endif; ?>
                             <button type="submit" name="action" value="delete" 
                                     onclick="return confirm('Are you sure you want to delete this user?')" 
                                     class="delete-button">Delete</button>

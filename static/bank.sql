@@ -1,3 +1,5 @@
+-- Creating database and tables for the bank system
+
 CREATE DATABASE IF NOT EXISTS bank;
 USE bank;
 
@@ -21,7 +23,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     account_number VARCHAR(20) UNIQUE NOT NULL,
     account_type ENUM('savings', 'checking', 'business') NOT NULL,
     balance DECIMAL(15,2) DEFAULT 0.00,
-    interest_rate DECIMAL(5,2) DEFAULT 0.00,
+    interest_rate DECIMAL(5,2) DEFAULT 0.00, -- This isn't used in the code, but it's here since the task was supposed to include interest rates
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -48,10 +50,15 @@ CREATE TABLE IF NOT EXISTS logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+
+
+
+-- Creating admin account
+
 INSERT INTO users (username, password, email, phone, name, address, user_type) 
 VALUES (
     'admin',
-    '$2y$10$8tN.cur.YBQZ2J.IU0s8/.KE8O.AI6Z6RyxAVOqH71.k6uNJwZhvq',
+    '$2y$10$8tN.cur.YBQZ2J.IU0s8/.KE8O.AI6Z6RyxAVOqH71.k6uNJwZhvq', -- password: admin
     'admin@bank.com',
     '12345678',
     'System Administrator',
