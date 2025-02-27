@@ -6,6 +6,7 @@ $notification = null;
 $navn = null;
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // Hent data fra registreringsskjemaet
     $username = $_POST["username"];
     $password = $_POST["password"];
     $email = $_POST["email"];
@@ -16,43 +17,36 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $address = $_POST["adresse"];
     $user_type = $_POST["user_type"];
 
+    // Sjekk at passordet er langt nok
     if (strlen($password) < 8) {
         $notification = '<div class="error">Password must be at least 8 characters long.</div>';
     } else {
         $conn = getDbConnection();
 
-        if (isset($_POST['username']) && ($_POST['password'])) {
-            $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ? OR phone = ?");
-            $stmt->execute([$username, $email, $telefon]);
-            
-            if ($stmt->fetch()) {
-                $notification = '<div class="error">Username, E-Mail or phone number is already taken</div>';
-            } else {
-                // Generate 2FA secret
-                $ga = new PHPGangsta_GoogleAuthenticator();
-                $secret = $ga->createSecret();
-                
-                $stmt = $conn->prepare("INSERT INTO users (username, password, email, phone, name, address, user_type, two_factor_secret) 
-                                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([
-                    $username, 
-                    password_hash($password, PASSWORD_DEFAULT), 
-                    $email, 
-                    $telefon, 
-                    $navn,
-                    $address,
-                    $user_type,
-                    $secret
-                ]);
+        // Sjekk om brukernavn, epost eller telefon allerede er i bruk
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ? OR phone = ?");
+        $stmt->execute([$username, $email, $telefon]);
+        
+        if ($stmt->fetch()) {
+            $notification = '<div class="error">Username, email or phone number is already taken</div>';
+        } else {
+            // Opprett ny bruker
+            $stmt = $conn->prepare("INSERT INTO users (username, password, email, phone, name, address, user_type) 
+                                  VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $username, 
+                password_hash($password, PASSWORD_DEFAULT), 
+                $email, 
+                $telefon, 
+                $navn,
+                $address,
+                $user_type
+            ]);
 
-                // Store 2FA setup data in session
-                $_SESSION['temp_2fa_secret'] = $secret;
-                $_SESSION['temp_username'] = $username;
-                
-                // Redirect to 2FA setup page
-                header("Location: setup_2fa.php");
-                exit;
-            }
+            // Logg inn brukeren automatisk
+            $_SESSION['username'] = $username;
+            header("Location: index.php");
+            exit;
         }
     }
 }
@@ -90,11 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <input type="text" placeholder="Last Name" name="etternavn" required>
         <input type="text" placeholder="Address" name="adresse" required>
         <input type="tel" placeholder="Phone Number" name="telefon" required 
-               pattern="[0-9]{8}" title="Please enter a valid 8-digit phone number">
+               pattern="[0-9]{8}" title="Vennligst skriv inn et gyldig 8-sifret telefonnummer">
         <input type="email" placeholder="E-Mail" name="email" required>
         <input type="text" placeholder="Username" name="username" required>
         <input type="password" placeholder="Password" name="password" 
-               pattern=".{8,}" title="Password must be at least 8 characters long" required>
+               pattern=".{8,}" title="Passordet må være minst 8 tegn langt" required>
         <input type="submit" value="Register">
         
         <p>Already have an account? <a href="login.php">Login here</a></p>

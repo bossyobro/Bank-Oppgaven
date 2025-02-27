@@ -1,8 +1,7 @@
 <?php
 
 function validateAccountNumber($accountNumber) {
-
-    // Check if the account number is valid
+    // Sjekk om kontonummeret er gyldig
     if (!preg_match('/^\d{4}\.\d{2}\.\d{5}$/', $accountNumber)) {
         return false;
     }
@@ -21,7 +20,7 @@ function validateAccountNumber($accountNumber) {
     
     return true;
 }
-
+    
 function logActivity($conn, $userId, $activity, $details = null) {
     $stmt = $conn->prepare("
         INSERT INTO logs (user_id, activity, details, ip_address, user_agent) 

@@ -1,8 +1,8 @@
--- Creating database and tables for the bank system
-
+-- Oppretter database og tabeller for banksystemet
 CREATE DATABASE IF NOT EXISTS bank;
 USE bank;
 
+-- Brukertabell for å lagre kundeinformasjon
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -12,11 +12,10 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(100) NOT NULL,
     address TEXT NOT NULL,
     user_type ENUM('personal', 'business', 'admin') NOT NULL DEFAULT 'personal',
-    two_factor_secret VARCHAR(32) DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('active', 'deactivated') NOT NULL DEFAULT 'active'
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Kontotabell for å lagre bankkontoer
 CREATE TABLE IF NOT EXISTS accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -28,6 +27,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Transaksjonstabell for å spore alle bevegelser
 CREATE TABLE IF NOT EXISTS transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     account_id INT NOT NULL,
@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
+-- Loggtabell for sikkerhet og sporing
 CREATE TABLE IF NOT EXISTS logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
@@ -50,15 +51,11 @@ CREATE TABLE IF NOT EXISTS logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-
-
-
--- Creating admin account
-
+-- Opprett administratorkonto
 INSERT INTO users (username, password, email, phone, name, address, user_type) 
 VALUES (
     'admin',
-    '$2y$10$8tN.cur.YBQZ2J.IU0s8/.KE8O.AI6Z6RyxAVOqH71.k6uNJwZhvq', -- password: admin
+    '$2y$10$8tN.cur.YBQZ2J.IU0s8/.KE8O.AI6Z6RyxAVOqH71.k6uNJwZhvq', -- passord: admin
     'admin@bank.com',
     '12345678',
     'System Administrator',

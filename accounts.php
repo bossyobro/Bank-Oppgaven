@@ -4,59 +4,44 @@ require "db.php";
 require "auth.php";
 require "includes/validators.php";
 
+// Sjekk om brukeren er logget inn
 checkAuth();
 
+// Variabel for meldinger til brukeren
 $notification = null;
 $conn = getDbConnection();
 $username = $_SESSION['username'];
 
-// Get user ID
+// Hent bruker-ID
 $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
 $stmt->execute([$username]);
 $user_id = $stmt->fetchColumn();
 
-// Handle new account creation
+// Håndter opprettelse av ny konto
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['create_account'])) {
     $account_type = $_POST['account_type'];
     
     try {
-        // Generate account number: bank.type.number (e.g., 1234.01.12345)
+        // Generer enkelt kontonummer (bank.type.nummer)
         $bank_code = "1234";
-        $type_code = $account_type === "savings" ? "01" : ($account_type === "checking" ? "02" : "03");
+        $type_code = $account_type === "savings" ? "01" : "02";
+        $account_number = $bank_code . "." . $type_code . "." . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
         
-        // Generate random number and check if it's unique
-        do {
-            $account_number = str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
-            $full_account = $bank_code . "." . $type_code . "." . $account_number;
-            
-            // Validate the generated account number
-            if (!validateAccountNumber($full_account)) {
-                throw new Exception("Invalid account number generated");
-            }
-            
-            $stmt = $conn->prepare("SELECT id FROM accounts WHERE account_number = ?");
-            $stmt->execute([$full_account]);
-        } while ($stmt->fetch());
+        // Opprett ny konto i databasen
+        $stmt = $conn->prepare("
+            INSERT INTO accounts (user_id, account_number, account_type) 
+            VALUES (?, ?, ?)
+        ");
+        $stmt->execute([$user_id, $account_number, $account_type]);
         
-        // Create the account
-        $stmt = $conn->prepare("INSERT INTO accounts (user_id, account_number, account_type) VALUES (?, ?, ?)");
-        if ($stmt->execute([$user_id, $full_account, $account_type])) {
-            // Log account creation
-            logActivity($conn, $user_id, 'account_created', json_encode([
-                'account_type' => $account_type,
-                'account_number' => $full_account
-            ]));
-            
-            $notification = '<div class="success">Account created successfully!</div>';
-        } else {
-            throw new Exception("Failed to create account");
-        }
+        $notification = '<div class="success">Account created successfully</div>';
+        
     } catch (Exception $e) {
-        $notification = '<div class="error">' . htmlspecialchars($e->getMessage()) . '</div>';
+        $notification = '<div class="error">Failed to create account</div>';
     }
 }
 
-// Get user's accounts
+// Hent alle brukerens kontoer
 $stmt = $conn->prepare("SELECT * FROM accounts WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $accounts = $stmt->fetchAll();

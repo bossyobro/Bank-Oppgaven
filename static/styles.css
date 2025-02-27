@@ -479,13 +479,3 @@ textarea {
     border-radius: 4px;
     font-weight: bold;
 }
-
-.status-active {
-    background-color: rgba(76, 175, 80, 0.2);
-    color: #4CAF50;
-}
-
-.status-deactivated {
-    background-color: rgba(255, 82, 82, 0.2);
-    color: #ff5252;
-}
