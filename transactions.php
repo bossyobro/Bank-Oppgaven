@@ -2,7 +2,7 @@
 session_start();
 require "db.php";
 require "auth.php";
-require "includes/validators.php";  // Add validator functions
+require "includes/validators.php"; 
 
 checkAuth();
 
@@ -26,25 +26,21 @@ if (!$account) {
     exit;
 }
 
-// Handle transaction submission
+// Handle transaction submit
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $transaction_type = $_POST['transaction_type'];
     $amount = (float)$_POST['amount'];
     $to_account = isset($_POST['to_account']) ? $_POST['to_account'] : null;
     
     try {
-        if ($amount <= 0) {
-            throw new Exception("Please enter a valid amount.");
-        }
-
         if ($transaction_type === 'transfer') {
             if (!validateAccountNumber($to_account)) {
                 throw new Exception("Invalid account number format.");
             }
         }
-
-        $conn->beginTransaction();
         
+        $conn->beginTransaction();
+
         switch ($transaction_type) {
             case 'deposit':
                 // Add money to account
