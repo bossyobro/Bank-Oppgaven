@@ -2,21 +2,20 @@
 session_start();
 require "db.php";
 
-// Variabel for å lagre feilmeldinger
+
 $notification = null;
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    // Hent brukernavn og passord fra skjema
+
     $username = $_POST['username'];
     $password = $_POST['password'];
     
     $conn = getDbConnection();
-    // Sjekk om brukeren eksisterer med brukernavn eller epost
+
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
     $stmt->execute([$username, $username]);
     $user = $stmt->fetch();
     
-    // Verifiser passord og logg inn hvis korrekt
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['username'] = $user['username'];
         header("Location: index.php");

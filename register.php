@@ -1,6 +1,5 @@
 <?php
 require "db.php";
-require "PHPGangsta/GoogleAuthenticator.php";
 session_start();
 $notification = null;
 $navn = null;
@@ -17,10 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $address = $_POST["adresse"];
     $user_type = $_POST["user_type"];
 
-    // Sjekk at passordet er langt nok
+
+
+    // Sjekk at passordet er langt nok og at den inneholder minst et tall og en bokstav
     if (strlen($password) < 8) {
         $notification = '<div class="error">Password must be at least 8 characters long.</div>';
-    } else {
+    } elseif (!preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $password)){
+        $notification = '<div class="error">Password must contain at least 1 number and 1 charact</div>';
+    }else {
         $conn = getDbConnection();
 
         // Sjekk om brukernavn, epost eller telefon allerede er i bruk
@@ -50,10 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 }
-
-// if (isset($_SESSION['username']) && ($_SESSION['password'])) {
-//     header("location: index.php");
-// }
 
 
 

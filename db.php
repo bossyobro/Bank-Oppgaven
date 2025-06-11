@@ -4,7 +4,7 @@ function getDbConnection() {
     $host = "localhost";
     $dbname = "bank";
     $username = "root";
-    $password = "";
+    $password = "key";
 
     try {
         $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
