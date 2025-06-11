@@ -14,7 +14,7 @@ Følg disse trinnene for å klone og sette opp prosjektet på Ubuntu Desktop:
 2. **Klone prosjektet**:
    Naviger til katalogen der du vil lagre prosjektet, og klon det:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/bossyobro/Bank-Oppgaven.git
    cd BankOppgave
    ```
 
