@@ -1,46 +1,71 @@
-# BankOppgave
 
-## Brukerstøtte
 
-Følg disse trinnene for å klone og sette opp prosjektet på Ubuntu Desktop:
 
-1. **Installer nødvendige avhengigheter**:
-   Åpne terminalen og kjør følgende kommandoer:
-   ```bash
-   sudo apt update
-   sudo apt install git apache2 php php-mysql
-   ```
 
-2. **Klone prosjektet**:
-   Naviger til katalogen der du vil lagre prosjektet, og klon det:
-   ```bash
-   git clone https://github.com/bossyobro/Bank-Oppgaven.git
-   cd BankOppgave
-   ```
 
-3. **Kopier prosjektet til Apache-serveren**:
-   Flytt prosjektfilene til Apache sin rotkatalog:
-   ```bash
-   sudo cp -r . /var/www/html/BankOppgave
-   ```
 
-4. **Gi nødvendige tillatelser**:
-   Sørg for at Apache har tilgang til filene:
-   ```bash
-   sudo chown -R www-data:www-data /var/www/html/BankOppgave
-   sudo chmod -R 755 /var/www/html/BankOppgave
-   ```
 
-5. **Start Apache-serveren**:
-   Start eller restart Apache-serveren:
-   ```bash
-   sudo systemctl restart apache2
-   ```
+#  Welcome to the Bank Portal
 
-6. **Åpne prosjektet i nettleseren**:
-   Gå til `http://localhost/BankOppgave` i nettleseren din for å se prosjektet.
+This portal lets you manage your bank accounts, view transactions, and make deposits easily.
 
-Hvis du støter på problemer, sjekk Apache-loggene:
+##  Creating an Account
+
+1. Go to the **Register** page.
+2. Choose a unique **username** and a secure **password**.
+3. Click **Register** to create your account.
+4. After registering, you will be **automatically logged in** and taken to your dashboard.
+
+##  Logging In (For Returning Users)
+
+1. Visit the **Login** page.
+2. Enter your **username** and **password**.
+3. Click **Login** to access your dashboard.
+
+##  My Accounts
+
+- After logging in, you will see a list of your accounts displayed as cards.
+- Each account card shows basic details.
+- Click the **View Transactions** button on an account card to open that account’s detailed view.
+
+##  Account Details & Transactions
+
+- In the account details view, you can:
+  - See recent transactions for that account.
+  - Access options such as **Deposit**, **Withdraw**, or **Transfer** funds.
+  - Manage your account activity in one place.
+
+##  Logging Out
+
+Click the **Logout** button or link to securely end your session.
+
+
+
+
+# Setting Up the Bank Project on Apache with Ubuntu
+# I am assuming you know how to setup apache.
+
+Follow these steps to get the project running on your Ubuntu server using Apache:
+## 1. Install Apache and PHP
+
+Open a terminal and run:
+
 ```bash
-sudo tail -f /var/log/apache2/error.log
+sudo apt update
+sudo apt install apache2 php libapache2-mod-php php-mysql -y
+
+sudo apt install mariadb-server -y
+
+# Make sure to create a secure root password
+sudo mysql_secure_installation
+
+
+sudo mariadb -u root -p
 ```
+# Import the dataschema from the static folder in the repository *bank.sql*
+
+# Setting up Apache
+
+## Define document root and give neccesary permissions
+
+## Apache config path: /etc/apache2/apache2.conf
