@@ -13,8 +13,9 @@ This portal lets you manage your bank accounts, view transactions, and make depo
 
 1. Go to the **Register** page.
 2. Choose a unique **username** and a secure **password**.
-3. Click **Register** to create your account.
-4. After registering, you will be **automatically logged in** and taken to your dashboard.
+3. Fill in all important details, phone number, adress etc.
+4. Click **Register** to create your account.
+5. After registering, you will be **automatically logged in** and taken to your dashboard.
 
 ##  Logging In (For Returning Users)
 
@@ -69,3 +70,4 @@ sudo mariadb -u root -p
 ## Define document root and give neccesary permissions
 
 ## Apache config path: /etc/apache2/apache2.conf
+
