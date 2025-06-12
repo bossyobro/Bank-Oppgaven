@@ -65,8 +65,13 @@ sudo mariadb -u root -p
 # Import the dataschema from the static folder in the repository *bank.sql*
 ```
 
-# Setting up Apache
-
-- Define document root and give neccesary permissions
+# Something wrong with Apache? 
+- Remember to define document root and give neccesary permissions
 - Apache config path: /etc/apache2/apache2.conf
+
+```bash
+# Making sure apache can read the files
+sudo chown -R www-data:www-data /var/www/html/Bank-Oppgaven
+sudo chmod -R 755 /var/www/html/bank-project
+```
 
