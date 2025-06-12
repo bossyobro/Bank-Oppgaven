@@ -62,12 +62,11 @@ sudo mysql_secure_installation
 
 
 sudo mariadb -u root -p
-```
 # Import the dataschema from the static folder in the repository *bank.sql*
+```
 
 # Setting up Apache
 
-## Define document root and give neccesary permissions
-
-## Apache config path: /etc/apache2/apache2.conf
+- Define document root and give neccesary permissions
+- Apache config path: /etc/apache2/apache2.conf
 
